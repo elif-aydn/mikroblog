@@ -1,0 +1,34 @@
+# Python tarafından oluşturulan geçici dosyalar
+__pycache__/
+*.py[cod]
+note
+
+# Python sanal ortamları
+venv/
+.venv/
+env/
+
+# Ortam değişkenleri ve gizli bilgiler
+.env
+
+# Flask çalışma verileri
+instance/
+
+# Yerel veritabanı dosyaları
+*.db
+*.sqlite
+*.sqlite3
+
+# Test ve günlük dosyaları
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Editör dosyaları
+.vscode/
+.idea/
+
+# Windows dosyaları
+Thumbs.db
+Desktop.ini
