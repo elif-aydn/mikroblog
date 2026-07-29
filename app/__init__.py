@@ -1,6 +1,7 @@
 from flask import Flask #Flask paketinin içindeki Flask sınıfını kullanıma açar.
 from flask_sqlalchemy import SQLAlchemy #Flask-SQLAlchemy paketinin içindeki SQLAlchemy sınıfını kullanıma açar.
 from flask_migrate import Migrate #Flask-Migrate paketinin içindeki Migrate sınıfını kullanıma açar.
+from flask_login import LoginManager
 
 from config import Config #config.py modülünün içindeki Config sınıfını getirir.
 
@@ -11,5 +12,5 @@ app.config.from_object(Config) #Config sınıfındaki büyük harfle yazılmış
 
 db = SQLAlchemy(app) #SQLAlchemy sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
 migrate = Migrate(app, db) #Migrate sınıfının bir örneğini oluşturur ve Flask uygulaması ile SQLAlchemy veritabanına bağlar.
-
+login = LoginManager(app) #LoginManager sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
 from app import routes, models # routes.py ve models.py dosyalarını uygulamaya dâhil eder.
