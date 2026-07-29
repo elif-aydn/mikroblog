@@ -4,10 +4,11 @@ from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
-from app import db
+from app import db, login
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-
-class User(db.Model):
+class User(db.Model, UserMixin):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
 
     username: so.Mapped[str] = so.mapped_column(
@@ -29,10 +30,20 @@ class User(db.Model):
     posts: so.WriteOnlyMapped["Post"] = so.relationship(
         back_populates="author"
     )
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
-
+    
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+@login.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
 
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
