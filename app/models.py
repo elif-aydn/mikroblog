@@ -8,6 +8,8 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+from hashlib import md5
+
 class User(db.Model, UserMixin):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
 
@@ -41,6 +43,25 @@ class User(db.Model, UserMixin):
     
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+    def avatar(self, size):
+        digest = md5(
+            self.email.lower().encode('utf-8')
+        ).hexdigest()
+
+        return (
+            f'https://www.gravatar.com/avatar/{digest}'
+            f'?d=identicon&s={size}'
+        )
+    
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(
+        sa.String(140)
+    )
+
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
+        default=lambda: datetime.now(timezone.utc)
+    )
+    
 @login.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))
