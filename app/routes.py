@@ -166,3 +166,10 @@ def edit_profile():
         title='Edit Profile',
         form=form
     )
+
+# @app.route("/senol")
+# def senol():
+#     deneme=[
+#         1,2,3,4,5,6,7,8,9,10
+#     ]
+#     return render_template("senol.html", deneme=deneme)
