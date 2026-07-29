@@ -1,7 +1,10 @@
-from app import app  # app paketinin içindeki app adlı Flask nesnesini getir.
+from app import app, db  # app paketinin içindeki app adlı Flask nesnesini getir.
 from flask import render_template, flash, redirect, url_for
 from app.forms import LoginForm
 
+import sqlalchemy as sa
+from flask_login import current_user, login_user, logout_user
+from app.models import User
 
 @app.route('/')
 @app.route('/index')
@@ -38,22 +41,30 @@ def index():
 
 # Bu bir görünüm fonksiyonudur.
 # Fonksiyon, index.html şablonunu işleyerek tarayıcıya gönderilecek HTTP yanıtını oluşturur.
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-
-    if form.validate_on_submit(): #Bu metot iki temel kontrol yapar: 1)İstek form gönderimi mi?, Alanlar doğrulama kurallarını geçiyor mu?
-        flash(
-            'Login requested for user {}, remember_me={}'.format(
-                form.username.data,
-                form.remember_me.data
-            )
-        )
+    if current_user.is_authenticated:
         return redirect(url_for('index'))
 
-    return render_template(
-        'login.html',
-        title='Sign In',
-        form=form
-    )
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = db.session.scalar(
+            sa.select(User).where(
+                User.username == form.username.data
+            )
+        )
+
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+
+    return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
