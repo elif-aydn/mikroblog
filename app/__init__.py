@@ -13,4 +13,6 @@ app.config.from_object(Config) #Config sınıfındaki büyük harfle yazılmış
 db = SQLAlchemy(app) #SQLAlchemy sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
 migrate = Migrate(app, db) #Migrate sınıfının bir örneğini oluşturur ve Flask uygulaması ile SQLAlchemy veritabanına bağlar.
 login = LoginManager(app) #LoginManager sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
+login.login_view = 'login'
+
 from app import routes, models # routes.py ve models.py dosyalarını uygulamaya dâhil eder.
