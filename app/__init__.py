@@ -1,4 +1,4 @@
-from flask import Flask #Flask paketinin içindeki Flask sınıfını kullanıma açar.
+from flask import Flask, logging #Flask paketinin içindeki Flask sınıfını kullanıma açar.
 from flask_sqlalchemy import SQLAlchemy #Flask-SQLAlchemy paketinin içindeki SQLAlchemy sınıfını kullanıma açar.
 from flask_migrate import Migrate #Flask-Migrate paketinin içindeki Migrate sınıfını kullanıma açar.
 from flask_login import LoginManager
@@ -15,4 +15,4 @@ migrate = Migrate(app, db) #Migrate sınıfının bir örneğini oluşturur ve F
 login = LoginManager(app) #LoginManager sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
 login.login_view = 'login'
 
-from app import routes, models # routes.py ve models.py dosyalarını uygulamaya dâhil eder.
+from app import routes, models, errors # routes.py, models.py ve errors.py dosyalarını uygulamaya dâhil eder.
