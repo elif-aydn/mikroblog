@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from app import app, db  # app paketinin içindeki app adlı Flask nesnesini getir.
 from flask import render_template, flash, redirect, url_for
 from app.forms import LoginForm
@@ -16,6 +17,12 @@ from flask_login import (
     logout_user,
 )
 from app.forms import LoginForm, RegistrationForm
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now(timezone.utc)
+        db.session.commit()
 
 @app.route('/')
 @app.route('/index')
