@@ -54,6 +54,14 @@ class User(db.Model, UserMixin):
             f'?d=identicon&s={size}'
         )
     
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(
+        sa.String(140)
+    )
+
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
+        default=lambda: datetime.now(timezone.utc)
+    )
+    
 @login.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))
