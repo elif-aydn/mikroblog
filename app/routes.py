@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+
+from flask_wtf import form
 from app import app, db  # app paketinin içindeki app adlı Flask nesnesini getir.
 from flask import render_template, flash, redirect, url_for
 from app.forms import LoginForm
@@ -18,7 +20,8 @@ from flask_login import (
 )
 from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from app.forms import EmptyForm
-
+from app.forms import PostForm
+from app.models import Post
 
 @app.before_request
 def before_request():
@@ -26,11 +29,19 @@ def before_request():
         current_user.last_seen = datetime.now(timezone.utc)
         db.session.commit()
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 # Bunlar birer dekoratördür. URL adresleriyle Python fonksiyonunu eşleştirirler.
 def index():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
+
     user = {
         'username': 'Elif'
     }
@@ -39,24 +50,16 @@ def index():
     # mock data, yani sahte/örnek veri denir.
 
     # posts, iki sözlük içeren bir listedir.
-    posts = [
-        {
-            'author': {'username': 'Mehmet'},
-            'body': 'Bugün Flask şablonlarını öğreniyorum.'
-        },
-        {
-            'author': {'username': 'Ayşe'},
-            'body': 'Jinja ile dinamik HTML oluşturmak oldukça kullanışlı.'
-        }
-    ]
-
+    posts = db.session.scalars(current_user.following_posts()).all()
+    
     return render_template(
         'index.html',        # İşlenecek şablon dosyası
         title='Ana Sayfa',   # HTML'e gönderilen başlık
         user=user,           # HTML'e gönderilen kullanıcı sözlüğü
                              # Soldaki user: Jinja değişkeni
                              # Sağdaki user: Python değişkeni
-        posts=posts          # HTML'e gönderilen gönderiler listesi
+        posts=posts,         # HTML'e gönderilen gönderiler listesi
+        form=form            # HTML'e gönderilen form nesnesi
     )
 
 
