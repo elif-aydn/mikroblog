@@ -1,41 +1,32 @@
-<!-- <!doctype html>
-<html lang="tr">
-    <head>
-    <meta charset="UTF-8">
-
-        {% if title %}
-            <title>{{ title }} - Microblog</title>
-        {% else %}
-            <title>Microblog'a Hoş Geldiniz</title>
-        {% endif %}
-    </head>
-    <body>
-        <h1>Merhaba, {{ user.username }}!</h1>
-
-        {% for post in posts %} #posts listesindeki her eleman sırayla post değişkenine atanır.
-            <div>
-                <p>
-                    {{ post.author.username }}: #Gönderinin yazarını gösterir.
-                    <b>{{ post.body }}</b> #Gönderinin içeriğini gösterir.
-                </p>
-            </div>
-        {% endfor %}
-    </body>
-</html> -->
-
 <!-- index.html dosyasının base.html şablonunu temel alacağını bildirir. -->
 
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
 {% block content %}
-    <h1>Merhaba, {{ user.username }}!</h1>
+    <h1>Merhaba, {{ current_user.username }}!</h1>
+    {% if form %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }}<br>
+            {{ form.post(cols=32, rows=4) }}<br>
+            {% for error in form.post.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% endif %}
 
     {% for post in posts %}
-        <div>
-            <p>
-                {{ post.author.username }}:
-                <b>{{ post.body }}</b>
-            </p>
-        </div>
+        {% include '_post.html' %}
+
     {% endfor %}
+
+    {% if prev_url %}
+    <a href="{{ prev_url }}">Newer posts</a>
+    {% endif %}
+    {% if next_url %}
+    <a href="{{ next_url }}">Older posts</a>
+    {% endif %}
 {% endblock %}
