@@ -18,3 +18,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     POSTS_PER_PAGE = 25
+    MAIL_SERVER = os.environ.get('MAIL_SERVER') or '127.0.0.1'
+    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 8025)
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = False
+
+    ADMINS = ['admin@example.com']

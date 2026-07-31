@@ -4,6 +4,7 @@ from flask_migrate import Migrate #Flask-Migrate paketinin içindeki Migrate sı
 from flask_login import LoginManager
 
 from config import Config #config.py modülünün içindeki Config sınıfını getirir.
+from flask_mail import Mail #Flask-Mail paketinin içindeki Mail sınıfını kullanıma açar.
 
 app = Flask(__name__) #Uygulamamızın temel Flask nesnesini oluşturur.
 app.config.from_object(Config) #Config sınıfındaki büyük harfle yazılmış yapılandırma değişkenlerini Flask uygulamasına aktarır.
@@ -14,5 +15,6 @@ db = SQLAlchemy(app) #SQLAlchemy sınıfının bir örneğini oluşturur ve Flas
 migrate = Migrate(app, db) #Migrate sınıfının bir örneğini oluşturur ve Flask uygulaması ile SQLAlchemy veritabanına bağlar.
 login = LoginManager(app) #LoginManager sınıfının bir örneğini oluşturur ve Flask uygulamasına bağlar.
 login.login_view = 'login'
+mail = Mail(app)
 
 from app import routes, models, errors # routes.py, models.py ve errors.py dosyalarını uygulamaya dâhil eder.

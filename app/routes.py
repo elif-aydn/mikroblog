@@ -22,6 +22,8 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from app.forms import EmptyForm
 from app.forms import PostForm
 from app.models import Post
+from app.forms import ResetPasswordRequestForm
+from app.email import send_password_reset_email
 
 @app.before_request
 def before_request():
@@ -220,6 +222,21 @@ def explore():
         if posts.has_prev else None
     return render_template("index.html", title='Explore', posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = db.session.scalar(
+            sa.select(User).where(User.email == form.email.data))
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
 # @app.route("/senol")
 # def senol():
 #     deneme=[
