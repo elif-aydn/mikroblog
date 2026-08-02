@@ -1,26 +1,42 @@
 from datetime import datetime, timezone
+from hashlib import md5
+from time import time
 from typing import Optional
 
+import jwt
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-
-from app import db, login
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
-from hashlib import md5
+from app import app, db, login
+
 
 followers = sa.Table(
     'followers',
     db.metadata,
-    sa.Column('follower_id', sa.Integer, sa.ForeignKey('user.id'),
-              primary_key=True),
-    sa.Column('followed_id', sa.Integer, sa.ForeignKey('user.id'),
-              primary_key=True)
+    sa.Column(
+        'follower_id',
+        sa.Integer,
+        sa.ForeignKey('user.id'),
+        primary_key=True
+    ),
+    sa.Column(
+        'followed_id',
+        sa.Integer,
+        sa.ForeignKey('user.id'),
+        primary_key=True
+    )
 )
 
-class User(db.Model, UserMixin):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+
+class User(UserMixin, db.Model):
+    id: so.Mapped[int] = so.mapped_column(
+        primary_key=True
+    )
 
     username: so.Mapped[str] = so.mapped_column(
         sa.String(64),
@@ -34,24 +50,65 @@ class User(db.Model, UserMixin):
         unique=True
     )
 
-    password_hash: so.Mapped[Optional[str]] = so.mapped_column(
+    password_hash: so.Mapped[
+        Optional[str]
+    ] = so.mapped_column(
         sa.String(256)
     )
 
-    posts: so.WriteOnlyMapped["Post"] = so.relationship(
-        back_populates="author"
+    about_me: so.Mapped[
+        Optional[str]
+    ] = so.mapped_column(
+        sa.String(140)
     )
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+
+    last_seen: so.Mapped[
+        Optional[datetime]
+    ] = so.mapped_column(
+        default=lambda: datetime.now(timezone.utc)
+    )
+
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(
+        back_populates='author'
+    )
+
+    following: so.WriteOnlyMapped['User'] = so.relationship(
+        secondary=followers,
+        primaryjoin=(
+            followers.c.follower_id == id
+        ),
+        secondaryjoin=(
+            followers.c.followed_id == id
+        ),
+        back_populates='followers'
+    )
+
+    followers: so.WriteOnlyMapped['User'] = so.relationship(
+        secondary=followers,
+        primaryjoin=(
+            followers.c.followed_id == id
+        ),
+        secondaryjoin=(
+            followers.c.follower_id == id
+        ),
+        back_populates='following'
+    )
+
+    def __repr__(self):
+        return '<User {}>'.format(
+            self.username
+        )
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(
+            password
+        )
 
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-    
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
+    def check_password(self, password):
+        return check_password_hash(
+            self.password_hash,
+            password
+        )
 
     def avatar(self, size):
         digest = md5(
@@ -62,6 +119,7 @@ class User(db.Model, UserMixin):
             f'https://www.gravatar.com/avatar/{digest}'
             f'?d=identicon&s={size}'
         )
+
     def follow(self, user):
         if not self.is_following(user):
             self.following.add(user)
@@ -71,83 +129,105 @@ class User(db.Model, UserMixin):
             self.following.remove(user)
 
     def is_following(self, user):
-        query = self.following.select().where(User.id == user.id)
-        return db.session.scalar(query) is not None
+        query = self.following.select().where(
+            User.id == user.id
+        )
+
+        return (
+            db.session.scalar(query)
+            is not None
+        )
 
     def followers_count(self):
-        query = sa.select(sa.func.count()).select_from(
-            self.followers.select().subquery())
+        query = sa.select(
+            sa.func.count()
+        ).select_from(
+            self.followers.select().subquery()
+        )
+
         return db.session.scalar(query)
 
     def following_count(self):
-        query = sa.select(sa.func.count()).select_from(
-            self.following.select().subquery())
-        return db.session.scalar(query)
-    
-    def following_posts(self):
-        Author = so.aliased(User)
-        Follower = so.aliased(User)
-        return (
-            sa.select(Post)
-            .join(Post.author.of_type(Author))
-            .join(Author.followers.of_type(Follower))
-            .where(Follower.id == self.id)
-            .order_by(Post.timestamp.desc())
+        query = sa.select(
+            sa.func.count()
+        ).select_from(
+            self.following.select().subquery()
         )
+
+        return db.session.scalar(query)
+
     def following_posts(self):
         Author = so.aliased(User)
         Follower = so.aliased(User)
 
         return (
             sa.select(Post)
-            .join(Post.author.of_type(Author))
+            .join(
+                Post.author.of_type(Author)
+            )
             .join(
                 Author.followers.of_type(Follower),
                 isouter=True
             )
-            .where(sa.or_(
-                Follower.id == self.id,  # Takip edilenlerin gönderileri
-                Author.id == self.id     # Kullanıcının kendi gönderileri
-            ))
+            .where(
+                sa.or_(
+                    Follower.id == self.id,
+                    Author.id == self.id
+                )
+            )
             .group_by(Post)
-            .order_by(Post.timestamp.desc())
-    )
-    about_me: so.Mapped[Optional[str]] = so.mapped_column(
-        sa.String(140)
-    )
-    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
-        default=lambda: datetime.now(timezone.utc)
-    )
+            .order_by(
+                Post.timestamp.desc()
+            )
+        )
 
-    following: so.WriteOnlyMapped['User'] = so.relationship(
-        secondary=followers, primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        back_populates='followers')
-    followers: so.WriteOnlyMapped['User'] = so.relationship(
-        secondary=followers, primaryjoin=(followers.c.followed_id == id),
-        secondaryjoin=(followers.c.follower_id == id),
-        back_populates='following')
-
-    def get_reset_password_token(self, expires_in=600):
-            return jwt.encode(
-                {'reset_password': self.id, 'exp': time() + expires_in},
-                app.config['SECRET_KEY'], algorithm='HS256')
+    def get_reset_password_token(
+        self,
+        expires_in=600
+    ):
+        return jwt.encode(
+            {
+                'reset_password': self.id,
+                'exp': time() + expires_in
+            },
+            app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
-                                algorithms=['HS256'])['reset_password']
-        except:
-                return
-        return db.session.get(User, id)
-    
+            user_id = jwt.decode(
+                token,
+                app.config['SECRET_KEY'],
+                algorithms=['HS256']
+            )['reset_password']
+
+        except (
+            jwt.InvalidTokenError,
+            KeyError,
+            TypeError
+        ):
+            return None
+
+        return db.session.get(
+            User,
+            user_id
+        )
+
+
 @login.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    return db.session.get(
+        User,
+        int(user_id)
+    )
+
 
 class Post(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    id: so.Mapped[int] = so.mapped_column(
+        primary_key=True
+    )
 
     body: so.Mapped[str] = so.mapped_column(
         sa.String(140)
@@ -168,4 +248,6 @@ class Post(db.Model):
     )
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<Post {}>'.format(
+            self.body
+        )
