@@ -1,0 +1,123 @@
+2026-08-02 22:37:34,399 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-02 22:40:11,630 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-02 22:43:51,160 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:08:58,710 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:38:24,569 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:45:57,853 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:46:04,202 ERROR: Exception on /register [GET] [in C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\app\routes.py", line 188, in register
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\nidya\Documents\mikroblog\app\templates\register.html", line 48, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2026-08-03 09:46:21,345 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:46:24,633 ERROR: Exception on /register [GET] [in C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\app\routes.py", line 188, in register
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\nidya\Documents\mikroblog\app\templates\register.html", line 4, in top-level template code
+    {% import 'bootstrap_wtf.html' as wtf %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 66, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 100, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: bootstrap_wtf.html
+2026-08-03 09:46:38,505 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:46:56,854 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 09:47:53,601 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 10:01:00,647 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
+2026-08-03 10:01:06,573 ERROR: Exception on /register [GET] [in C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\app\routes.py", line 188, in register
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\nidya\Documents\mikroblog\app\templates\register.html", line 2, in top-level template code
+    {% import 'bootstrap_wtf.html' as wtf %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 66, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nidya\Documents\mikroblog\venv\Lib\site-packages\flask\templating.py", line 100, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: bootstrap_wtf.html
+2026-08-03 10:01:45,209 INFO: Microblog startup [in C:\Users\nidya\Documents\mikroblog\app\__init__.py:86]
