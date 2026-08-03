@@ -1,3 +1,4 @@
+from flask import request
 import logging
 import os
 from logging.handlers import (
@@ -13,6 +14,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 from flask_moment import Moment
+from flask_babel import Babel
+
+def get_locale():
+    #return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return 'es'
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -78,6 +84,9 @@ if not app.debug:
             '[in %(pathname)s:%(lineno)d]'
         )
     )
+
+    
+    babel = Babel(app, locale_selector=get_locale)
 
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
