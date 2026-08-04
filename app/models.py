@@ -225,6 +225,9 @@ def load_user(user_id):
 
 
 class Post(db.Model):
+
+    language: so.Mapped[Optional[str]] = so.mapped_column(sa.String(5))
+
     id: so.Mapped[int] = so.mapped_column(
         primary_key=True
     )
