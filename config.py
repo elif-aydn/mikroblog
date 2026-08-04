@@ -56,3 +56,6 @@ class Config:
     POSTS_PER_PAGE = 25
 
     LANGUAGES = ['en', 'es']
+
+    MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
+    MS_TRANSLATOR_REGION = os.environ.get("MS_TRANSLATOR_REGION")
