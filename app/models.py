@@ -11,8 +11,9 @@ from werkzeug.security import (
     generate_password_hash,
     check_password_hash
 )
+from flask import current_app
 
-from app import app, db, login
+from app import db, login
 
 
 followers = sa.Table(
@@ -190,7 +191,7 @@ class User(UserMixin, db.Model):
                 'reset_password': self.id,
                 'exp': time() + expires_in
             },
-            app.config['SECRET_KEY'],
+            current_app.config['SECRET_KEY'],
             algorithm='HS256'
         )
 
@@ -199,7 +200,7 @@ class User(UserMixin, db.Model):
         try:
             user_id = jwt.decode(
                 token,
-                app.config['SECRET_KEY'],
+                current_app.config['SECRET_KEY'],
                 algorithms=['HS256']
             )['reset_password']
 

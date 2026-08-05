@@ -1,12 +1,12 @@
 import requests
 from flask_babel import _
 
-from app import app
+from flask import current_app
 
 
 def translate(text: str, source_language: str, dest_language: str) -> str:
-    key = app.config.get("MS_TRANSLATOR_KEY")
-    region = app.config.get("MS_TRANSLATOR_REGION")
+    key = current_app.config.get("MS_TRANSLATOR_KEY")
+    region = current_app.config.get("MS_TRANSLATOR_REGION")
 
     if not key:
         return _("Error: the translation service is not configured.")
